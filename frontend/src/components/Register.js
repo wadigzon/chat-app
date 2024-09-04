@@ -4,13 +4,22 @@ import axios from 'axios';
 const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [message, setMessage] = useState('');
 
     const handleRegister = async () => {
+        // Basic validation to check if passwords match
+        if (password !== confirmPassword) {
+            setMessage("Passwords do not match");
+            return;
+        }
+
         try {
-            await axios.post('/api/register', { username, password });
-            alert('Registration successful');
+            const response = await axios.post('/api/register', { username, password });
+            setMessage(response.data.message); // Display backend response message
+
         } catch (error) {
-            alert('Registration failed');
+            setMessage('Registration failed');
         }
     };
 
@@ -29,7 +38,16 @@ const Register = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
+            <input
+                type="password"
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+            />
             <button onClick={handleRegister}>Register</button>
+
+            {/* Display any messages */}
+            {message && <p>{message}</p>}
         </div>
     );
 };

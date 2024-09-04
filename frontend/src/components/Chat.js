@@ -10,12 +10,22 @@ const Chat = () => {
     }, []);
 
     const fetchMessages = async () => {
-        const response = await axios.get('/api/messages');
+        const token = localStorage.getItem('jwtToken'); // Retrieve token from localStorage
+        const response = await axios.get('/api/messages', {
+            headers: {
+                Authorization: `Bearer ${token}` // Include token in Authorization header
+            }
+        });
         setMessages(response.data);
     };
 
     const sendMessage = async () => {
-        await axios.post('/api/messages', { content: message });
+        const token = localStorage.getItem('jwtToken');
+        await axios.post('/api/messages', { content: message }, {
+            headers: {
+                Authorization: `Bearer ${token}` // Include token in Authorization header
+            }
+        });
         setMessage('');
         fetchMessages();
     };

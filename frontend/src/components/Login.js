@@ -7,8 +7,15 @@ const Login = ({ onLogin }) => {
 
     const handleLogin = async () => {
         try {
-            await axios.post('/api/login', { username, password });
-            onLogin();
+            const response = await axios.post('/api/login', { username, password });
+            const token = response.data.token;
+            
+            // Save token in localStorage
+            localStorage.setItem('jwtToken', token);
+            
+            alert('Login successful');
+            onLogin(); // This can be a callback to trigger any post-login actions
+
         } catch (error) {
             alert('Login failed');
         }
